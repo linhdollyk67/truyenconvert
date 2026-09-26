@@ -1,9 +1,11 @@
 ---
 name: story-converter
 description: >-
-  Use this skill when the user asks to convert stories (truyện) in a given folder.
-  This skill guides the agent to read each story and chapter, apply the conversion rules,
-  and output them to a new folder.
+  Use this skill when the user asks to convert, chuyển thể, or chuyển đổi a
+  story (truyện) — whether naming a specific story or just saying "convert"/
+  "convert truyện"/"chuyển thể truyện" in this project. This skill guides the
+  agent to read each story and chapter, apply the conversion rules, and output
+  them to `convert_story/`.
 ---
 
 # Story Converter Skill
@@ -13,6 +15,25 @@ This skill provides the step-by-step workflow for converting stories based on sp
 ## Context
 The user will provide an input folder containing multiple stories. Each story has its own subfolder or file containing different chapters.
 Your task is to create a new output folder and process each chapter of each story, applying specific creative rewriting rules.
+
+## Trigger Prompts
+
+Recognize any of these (or an obvious paraphrase, in Vietnamese or English) as
+a request to start this workflow:
+- "Convert truyện `<tên>`" / "Convert giúp tôi truyện `<tên>`"
+- "Chuyển thể truyện `<tên>`" / "Chuyển đổi truyện `<tên>`"
+- "Bắt đầu convert `<tên>`"
+- "Làm bản convert cho `<tên>`"
+- "Tiếp tục convert truyện `<tên>`" / "Convert tiếp chương tiếp theo của `<tên>`"
+  → this is a **resume**, not a restart: check `convert_story/<tên>/` for
+  already-approved chapters and `mapping.md`, and continue from the next
+  unconverted chapter instead of starting over.
+
+**Identifying which story**: match `<tên>` against the folder names in
+`original_story/` (via `list_dir`). If it matches exactly, proceed. If it's a
+close/partial match, confirm with the user which folder they mean before
+creating anything. If no story name is given at all, list the folders in
+`original_story/` and ask which one to convert.
 
 ## Workflow
 
@@ -47,7 +68,10 @@ Your task is to create a new output folder and process each chapter of each stor
 
 4. **Convert Chapters One at a Time, With Approval Gates** (per `GEMINI.md` rule 9):
    - Using the output folder already created in step 1 (same name as the
-     original), process chapters in order. For each chapter:
+     original), check which chapters already have an approved converted file.
+     If some exist (e.g. this is a resumed session), start from the next
+     unconverted chapter instead of redoing earlier ones.
+   - Process chapters in order. For each chapter:
      a. Read the chapter content using `view_file`.
      b. Rewrite the content following `mapping.md` and the general workspace
         rules (`GEMINI.md`):
