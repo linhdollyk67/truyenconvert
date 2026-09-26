@@ -23,6 +23,10 @@ conversion needs to stay consistent, before any rewriting starts.
    - Use `list_dir` to list all chapters in order.
    - **This folder is read-only** (per `GEMINI.md` rule 8): only ever
      `view_file`/`list_dir` it. Never write, edit, or create any file inside it.
+   - If it doesn't already exist, create `convert_story/<same folder name as
+     original>/` — the **exact same name** as the original story's folder
+     (identical spelling/casing/spacing), so every later step writes to the
+     right place.
 
 2. **Read the story**:
    - Read all chapters with `view_file`. For very long stories, read in batches

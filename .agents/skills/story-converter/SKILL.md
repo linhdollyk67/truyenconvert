@@ -25,6 +25,12 @@ Your task is to create a new output folder and process each chapter of each stor
      rule 8): only ever `view_file`/`list_dir` it. Never write, edit, rename,
      or delete anything inside it — all output goes to the Output Folder
      (`convert_story/`).
+   - **Create the story's output folder immediately**, before analysis: for
+     each story being converted, create `convert_story/<original folder name>/`
+     using the **exact same folder name** as in `original_story/` — identical
+     spelling, casing, spacing, and numbering, not translated or altered in
+     any way. This is what `story-analyzer`, `mapping-builder`, and every later
+     step write into.
 
 2. **Analyze the original story**:
    - Use the `story-analyzer` skill to read the whole story first and produce
@@ -40,8 +46,8 @@ Your task is to create a new output folder and process each chapter of each stor
      `mapping.md` as the source of truth.
 
 4. **Convert Chapters One at a Time, With Approval Gates** (per `GEMINI.md` rule 9):
-   - For each story, create a corresponding directory in the `Output Folder`.
-   - Process chapters in order. For each chapter:
+   - Using the output folder already created in step 1 (same name as the
+     original), process chapters in order. For each chapter:
      a. Read the chapter content using `view_file`.
      b. Rewrite the content following `mapping.md` and the general workspace
         rules (`GEMINI.md`):
